@@ -1,0 +1,23 @@
+# Ignore the target directory (except the final JAR file)
+target/
+!target/*.jar
+
+# Ignore local environment and configuration files
+*.env
+*.log
+*.iml
+*.class
+
+# Ignore OS and IDE-specific files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.bak
+
+# Ignore version control files
+.git
+.gitignore
+
+# Ignore dependency management folders (optional)
+node_modules/
