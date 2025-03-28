@@ -1,0 +1,3 @@
+[submodule "ecomerce-frontend-api"]
+	path = ecomerce-frontend-api
+	url = https://github.com/Adarsh0495/ecommerce-frontent.git
