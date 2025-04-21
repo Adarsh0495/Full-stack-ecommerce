@@ -3,7 +3,8 @@
 
 services:
   backend:
-    build: ./Ecommerce-Backend/Ecommerce 
+    # build: ./Ecommerce-Backend/Ecommerce
+    image: 121445407298.dkr.ecr.eu-north-1.amazonaws.com/backend
     ports:
       - "8080:8080"
     environment:
