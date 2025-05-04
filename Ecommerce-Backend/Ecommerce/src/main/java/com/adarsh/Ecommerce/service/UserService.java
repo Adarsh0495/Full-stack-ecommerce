@@ -3,6 +3,7 @@ package com.adarsh.Ecommerce.service;
 import com.adarsh.Ecommerce.model.Product;
 import com.adarsh.Ecommerce.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
 public class UserService {
     private final ProductRepository repo;
 
+    @Cacheable(value = "products", key = "'all'")
     public List<Product> getAllProducts()
     {
         return repo.findAll();

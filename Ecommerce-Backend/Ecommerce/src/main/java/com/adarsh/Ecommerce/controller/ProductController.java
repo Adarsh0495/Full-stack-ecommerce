@@ -29,7 +29,7 @@ public class ProductController
     public ResponseEntity<List<Product>> getAllProducts()
     {
         List<Product> products = service.getAllProducts();
-        System.out.println("Fetched Products: " + products); // Debug
+        System.out.println("Fetched Products: " + products);
         return new ResponseEntity<>(products,HttpStatus.OK);
     }
 
@@ -53,11 +53,11 @@ public class ProductController
 
             if (imageFile != null &&!imageFile.isEmpty()) {
                String imageUrl=service.uploadImage(imageFile);
-                System.out.println("Cloudinary URL: " + imageUrl); // Debug
+                System.out.println("Cloudinary URL: " + imageUrl);
                prod.setImage(imageUrl);
             }
             Product savedProduct = service.addProduct(prod);
-            System.out.println("Saved Product: " + savedProduct); // Debug
+            System.out.println("Saved Product: " + savedProduct);
             return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
         } catch (IOException e) {
             return new ResponseEntity<>("Failed to add product: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

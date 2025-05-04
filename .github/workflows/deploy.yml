@@ -1,0 +1,67 @@
+name: Deploy Application
+
+on:
+  push:
+    branches: [ main ]  # Triggers on pushes to main branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout code
+      - uses: actions/checkout@v4
+
+      # 2. Setup Node.js (for frontend)
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # 3. Build frontend
+      - name: Build Frontend
+        working-directory: ./frontend
+        run: |
+          npm install
+          npm run build
+
+      # 4. Setup Java (for backend)
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # 5. Build backend
+      - name: Build Backend
+        working-directory: ./backend
+        run: mvn clean package
+
+      # 6. Login to Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      # 7. Build and push Docker image
+      - name: Build and Push
+        run: |
+          docker build -t yourusername/ecommerce-app:${{ github.sha }} .
+          docker push yourusername/ecommerce-app:${{ github.sha }}
+
+      # 8. Deploy to server via SSH
+      - name: Deploy
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            docker pull yourusername/ecommerce-app:${{ github.sha }}
+            docker stop ecommerce-app || true
+            docker rm ecommerce-app || true
+            docker run -d \
+              --name ecommerce-app \
+              -p 80:80 \
+              yourusername/ecommerce-app:${{ github.sha }}
